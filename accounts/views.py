@@ -1,3 +1,4 @@
+from accounts.decorators import unauthenticated_user
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -7,7 +8,11 @@ from .forms import *
 from .filters import *
 
 
+@unauthenticated_user
 def login_page(request):
+    # if request.user.is_authenticated:
+    #     return redirect('home')
+    # else:
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -29,22 +34,23 @@ def logout_page(request):
     return redirect('login')
 
 
+@unauthenticated_user
 def register_page(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
-        form = CreateUserForm()
-        if request.method == 'POST':
-            #form = UserCreationForm(request.POST)
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('login')
+    # if request.user.is_authenticated:
+    #     return redirect('home')
+    # else:
+    form = CreateUserForm()
+    if request.method == 'POST':
+        #form = UserCreationForm(request.POST)
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
 
-        context = {
-            'form':form,
-        }
-        return render(request, 'accounts/register.html', context)  
+    context = {
+        'form':form,
+    }
+    return render(request, 'accounts/register.html', context)  
 
 @login_required(login_url='login')
 def home(request):
