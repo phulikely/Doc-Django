@@ -1,0 +1,6 @@
+admin : phuch
+pass  : 123456
+
+
+client : 
+test1/dmmt1991
